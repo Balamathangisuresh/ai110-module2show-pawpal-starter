@@ -1,0 +1,38 @@
+classDiagram
+    class PetTask {
+        +String title
+        +int duration_minutes
+        +String priority
+        +String frequency
+        +priority_score() int
+        +__repr__() String
+    }
+
+    class Pet {
+        +String name
+        +String species
+        +int age
+        +summary() String
+    }
+
+    class Schedule {
+        +Pet pet
+        +List planned_tasks
+        +total_duration() int
+        +display() String
+    }
+
+    class Scheduler {
+        +Pet pet
+        +List tasks
+        +add_task(task) None
+        +remove_task(title) None
+        +build_schedule() Schedule
+        -_sort_tasks() List
+    }
+
+    Scheduler "1" --> "1" Pet : manages
+    Scheduler "1" --> "*" PetTask : holds
+    Scheduler ..> Schedule : creates
+    Schedule "1" --> "1" Pet : references
+    Schedule "1" --> "*" PetTask : contains
