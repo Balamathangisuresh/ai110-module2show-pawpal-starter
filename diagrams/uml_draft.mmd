@@ -1,9 +1,12 @@
 classDiagram
-    class PetTask {
+    class Task {
         +String title
         +int duration_minutes
         +String priority
         +String frequency
+        +String start_time
+        +bool completed
+        +mark_complete() None
         +priority_score() int
         +__repr__() String
     }
@@ -11,28 +14,37 @@ classDiagram
     class Pet {
         +String name
         +String species
+        +String breed
         +int age
+        +List tasks
         +summary() String
+        +add_task(task) None
+        +remove_task(title) None
     }
 
-    class Schedule {
-        +Pet pet
-        +List planned_tasks
-        +total_duration() int
-        +display() String
+    class Owner {
+        +String name
+        +int available_minutes
+        +String preferred_start_time
+        +List pets
+        +add_pet(pet) None
+        +has_time_for(task) bool
     }
 
     class Scheduler {
-        +Pet pet
-        +List tasks
-        +add_task(task) None
-        +remove_task(title) None
-        +build_schedule() Schedule
+        +Owner owner
+        +List planned_tasks
+        +List skipped_tasks
+        +build_schedule() None
+        +check_conflicts() List
+        +filter_tasks(status, pet_name) List
+        +total_duration() int
+        +display() String
         -_sort_tasks() List
     }
 
-    Scheduler "1" --> "1" Pet : manages
-    Scheduler "1" --> "*" PetTask : holds
-    Scheduler ..> Schedule : creates
-    Schedule "1" --> "1" Pet : references
-    Schedule "1" --> "*" PetTask : contains
+    Owner "1" --> "*" Pet : owns
+    Pet "1" --> "*" Task : has
+    Scheduler "1" --> "1" Owner : uses
+    Owner ..> Task : checks time for
+    Scheduler ..> Pet : reads tasks from

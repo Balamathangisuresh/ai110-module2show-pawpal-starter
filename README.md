@@ -53,6 +53,22 @@ Paste a sample of your app's CLI or Streamlit output here so a reader can see wh
 #   09:00 — Feeding (10 min) [priority: high]
 #   ...
 ```
+    Daily plan for Bala:
+
+    Mochi (cat, 3 yrs):
+        - Feed Mochi (10 min, high) [pending]
+        - Clean litter box (15 min, medium) [pending]
+        - Playtime (20 min, low) [pending]
+
+    Biscuit (dog, 5 yrs):
+        - Morning walk (30 min, high) [pending]
+        - Give meds (5 min, high) [pending]
+        - Feed Biscuit (10 min, high) [pending]
+
+    Skipped (not enough time):
+        - Grooming (45 min, low) [pending]
+
+    Total time: 90 min
 
 ## 🧪 Testing PawPal+
 

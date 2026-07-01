@@ -7,10 +7,21 @@
 - Briefly describe your initial UML design.
 - What classes did you include, and what responsibilities did you assign to each?
 
+    PetTask - a single activity/task for a pet. It holds the task name, how long it takes, its priority level, and how often it repeats. Can convert its priority label into a numeric score (used for sorting) and display itself as a string.
+
+    Pet - the actual animal. it holds basic identity info (name, species, age) and is can produce a summary of itself as a string.
+
+    Owner - stores information about the person using the app like their name, how much time they have today, and when they want to start. Its method, has_time_for(task), checks whether a given task fits within the owner's remaining time.
+
+    Scheduler - the engine of the system. It holds a reference to both the Pet and the Owner (so it knows who is being cared for and what constraints apply), and three task lists: tasks (all candidate tasks), planned_tasks (tasks that made the cut), and skipped_tasks (tasks that didn't fit). Its responsibilities are to manage the task pool using the methods add_task() and remove_task(), building the schedule using the build_schedule() method which sorts tasks by priority and checks each one against owner.has_time_for() and populates planned_tasks and skipped_tasks, and gives the output using display() metod.
+
+
 **b. Design changes**
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
+
+    Yes, when brainstorming the uml, Claude recommended 5 different classes which split the now Scheduler class into two seperate classes. This seemed unnecessary and exceeded the number of classes so I asked Claude to move some attributes which it moved to Scheduler class.
 
 ---
 
