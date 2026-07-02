@@ -72,6 +72,8 @@ Paste a sample of your app's CLI or Streamlit output here so a reader can see wh
 
 ## 🧪 Testing PawPal+
 
+command to run tests: python -m pytest
+
 ```bash
 # Run the full test suite:
 pytest
@@ -80,11 +82,34 @@ pytest
 pytest --cov
 ```
 
+Description:
+    Sorting Correctness: tasks sort high to medium to low priority, same-priority tasks tie-break by start time, an empty task list sorts to [] without error.
+
+    Recurrence Logic — completing a "daily" task spawns a new one due +1 day, "weekly" spawns one due +7 days, a non-recurring frequency ("once") returns None and adds nothing, frequency matching is case-insensitive ("Daily" still works).
+
+    Conflict Detection: overlapping tasks are flagged whether on the same pet or different pets, identical start times are flagged, back-to-back tasks that only touch at the boundary are not flagged, no tasks means no conflicts, conflict_warnings() produces a readable message naming both tasks.
+
+    Time-Budget Packing/Skip Logic: tasks that don't fit the remaining budget go to skipped_tasks, a task whose duration exactly equals the remaining budget still fits, available_minutes is restored after build_schedule(), an already-completed task stays planned without consuming budget, no tasks produces an empty plan with zero total duration.
+
+    Priority String Case Sensitivity: lowercase "high"/"medium"/"low" score 3/2/1, capitalized ("High") or unrecognized ("urgent") values score 0.
+
+
+
 Sample test output:
 
 ```
 # Paste your pytest output here
+    ========================================= test session starts =========================================
+    platform win32 -- Python 3.14.5, pytest-9.1.1, pluggy-1.6.0
+    rootdir: D:\Classes\Summer_2_2026\ai110-module2show-pawpal-starter
+    plugins: anyio-4.13.0
+    collected 22 items                                                                                     
+
+    tests\test_pawpal.py ......................                                                      [100%]
+
+    ========================================= 22 passed in 0.10s ==========================================
 ```
+Confidence Level: 5 stars because it passed all of the tests.
 
 ## 📐 Smarter Scheduling
 
