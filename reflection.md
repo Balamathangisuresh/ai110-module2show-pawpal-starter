@@ -32,10 +32,18 @@
 - What constraints does your scheduler consider (for example: time, priority, preferences)?
 - How did you decide which constraints mattered most?
 
+    My scheduler considers time using the Owner's available minutes and priority to fit the highest priority tasks first.
+
+    I decided on using time and priority as the most improtant constraints because they felt non-negotiable as an owner cannot exceed the amount of time they have, and missing a high-priority task like taking meds for a lower priority task like playtime has a huge impact on the pet's health.
+
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
 - Why is that tradeoff reasonable for this scenario?
+
+    Scheduler uses a greedy algorithm by sorting by priority first, then start time to fill up an owner's available minutes. One trade off for this algorithm is always do the high-priotity tasks and not fit as many tasks as you can into the available minutes.
+
+    This is reasonable for this scenario because it reflects real consequences for a pet's health. An owner would rather choose to feed and take the pets on regular walks and see playtime get skipped rather than skipping high priority tasks just to get more tasks done. So trading time-efficiency for a guarantee that important tasks always come first matches how a pet owner would actually want their day prioritized.
 
 ---
 

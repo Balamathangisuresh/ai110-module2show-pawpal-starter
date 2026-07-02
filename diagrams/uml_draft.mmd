@@ -25,7 +25,6 @@ classDiagram
     class Owner {
         +String name
         +int available_minutes
-        +String preferred_start_time
         +List pets
         +add_pet(pet) None
         +has_time_for(task) bool
@@ -40,7 +39,7 @@ classDiagram
         +filter_tasks(status, pet_name) List
         +total_duration() int
         +display() String
-        -_sort_tasks() List
+        -_sort_by_priority() List
     }
 
     Owner "1" --> "*" Pet : owns
