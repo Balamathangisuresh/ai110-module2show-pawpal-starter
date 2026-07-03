@@ -94,7 +94,6 @@ Description:
     Priority String Case Sensitivity: lowercase "high"/"medium"/"low" score 3/2/1, capitalized ("High") or unrecognized ("urgent") values score 0.
 
 
-
 Sample test output:
 
 ```
@@ -109,7 +108,7 @@ Sample test output:
 
     ========================================= 22 passed in 0.10s ==========================================
 ```
-Confidence Level: 5 stars because it passed all of the tests.
+Confidence Level: 4 stars because it passed all of the tests I wrote which covers a good amount (both happy cases and edge cases), however my tests doesn't test all of the methods and all of the scenarios.
 
 ## 📐 Smarter Scheduling
 
@@ -122,12 +121,104 @@ Confidence Level: 5 stars because it passed all of the tests.
 
 ## 📸 Demo Walkthrough
 
-Describe your app in numbered steps so a reader can follow along without watching a video:
+### Streamlit UI features
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+- Enter the owner's name and available minutes for the day
+- Add a pet (name, species, breed, age)
+- Add a task to a chosen pet (title, start time, duration, frequency, priority)
+- Generate today's schedule with one click
+- Filter the generated plan by pet and by status (All / Pending / Completed)
+- Check a task's "Done" box to mark it complete (unchecking marks it incomplete again)
+- See skipped tasks and the total planned time at a glance
+
+### Example workflow
+
+1. Enter an owner name and available minutes (e.g., "Bala", 90 minutes).
+2. Add a pet (e.g., "Mochi" (cat, Siamese, 3 yrs)) with the **Add a Pet** button.
+3. Add that pet's tasks with the **Add a Task** form  (e.g., "Feed Mochi" at 08:00 (10 min, high, daily), "Playtime" at 10:00 (20 min, low, daily). Repeat for a second pet, e.g. "Biscuit" with a "Morning walk" at 08:00 (30 min, high, daily)).
+4. Click **Generate schedule**. Any overlapping tasks (like two tasks both starting at 10:00) surface immediately as warning banners.
+5. Use the pet/status filters above the plan table to narrow what's shown.
+6. Check a recurring task's "Done" box, it's marked complete and confirms its next occurrence (tomorrow for daily, +7 days for weekly) was automatically added.
+7. Anything that didn't fit today's available minutes appears in a "Skipped (not enough time)" banner, and the running **Total planned time** is shown at the bottom.
+
+### Key Scheduler behaviors shown
+
+- **Sorting** — the plan always lists tasks high → medium → low priority, with same-priority tasks ordered by start time.
+- **Conflict warnings** — two tasks with overlapping time windows (same pet or different pets) are flagged before/alongside the plan.
+- **Time-budget packing** — tasks that don't fit the owner's `available_minutes` are pushed to a skipped list instead of silently dropped.
+- **Recurrence** — completing a daily/weekly task automatically spawns its next occurrence on the correct future date.
+- **Filtering** — the same task pool can be viewed by pet, by completion status, or both.
+
+### Sample CLI output (`python main.py`)
+
+`main.py` seeds two pets with mixed priorities, start times, and an intentional same-time conflict, then walks through conflict checking, scheduling, filtering, and completing a recurring task:
+
+```
+=== Conflict Check ===
+  Warning: 'Playtime' (10:00, 20 min) overlaps 'Brush fur' (10:00, 10 min)
+  Warning: 'Feed Mochi' (08:00, 10 min) overlaps 'Morning walk' (08:00, 30 min)
+
+=== Schedule ===
+Daily plan for Bala:
+
+  Mochi (Siamese, 3 yrs):
+    - Feed Mochi (08:00, 10 min, high) [pending]
+    - Clean litter box (09:00, 15 min, medium) [pending]
+    - Playtime (10:00, 20 min, low) [pending]
+
+  Biscuit (Golden Retriever, 5 yrs):
+    - Morning walk (08:00, 30 min, high) [pending]
+    - Feed Biscuit (08:30, 10 min, high) [pending]
+    - Give meds (09:30, 5 min, high) [pending]
+
+  Skipped (not enough time):
+    - Brush fur (10:00, 10 min, low) [pending]
+    - Grooming (11:00, 45 min, low) [pending]
+
+  Total time: 90 min
+
+=== Pending Tasks ===
+  Playtime (10:00, 20 min, low) [pending]
+  Feed Mochi (08:00, 10 min, high) [pending]
+  Clean litter box (09:00, 15 min, medium) [pending]
+  Brush fur (10:00, 10 min, low) [pending]
+  Grooming (11:00, 45 min, low) [pending]
+  Give meds (09:30, 5 min, high) [pending]
+  Morning walk (08:00, 30 min, high) [pending]
+  Feed Biscuit (08:30, 10 min, high) [pending]
+
+=== Mochi's Tasks ===
+  Playtime (10:00, 20 min, low) [pending]
+  Feed Mochi (08:00, 10 min, high) [pending]
+  Clean litter box (09:00, 15 min, medium) [pending]
+  Brush fur (10:00, 10 min, low) [pending]
+
+=== Completed Tasks ===
+  Feed Mochi (08:00, 10 min, high) [done]
+
+  Next occurrence spawned: Feed Mochi due 2026-07-03
+
+=== Schedule After Completion ===
+Daily plan for Bala:
+
+  Mochi (Siamese, 3 yrs):
+    - Feed Mochi (08:00, 10 min, high) [done]
+    - Feed Mochi (08:00, 10 min, high) [pending]
+    - Clean litter box (09:00, 15 min, medium) [pending]
+    - Playtime (10:00, 20 min, low) [pending]
+
+  Biscuit (Golden Retriever, 5 yrs):
+    - Morning walk (08:00, 30 min, high) [pending]
+    - Feed Biscuit (08:30, 10 min, high) [pending]
+    - Give meds (09:30, 5 min, high) [pending]
+
+  Skipped (not enough time):
+    - Brush fur (10:00, 10 min, low) [pending]
+    - Grooming (11:00, 45 min, low) [pending]
+
+  Total time: 90 min
+
+  Total planned time: 90 / 90 min available
+```
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->

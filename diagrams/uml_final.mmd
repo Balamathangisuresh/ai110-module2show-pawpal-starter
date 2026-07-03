@@ -6,7 +6,10 @@ classDiagram
         +String frequency
         +String start_time
         +bool completed
+        +date due_date
         +mark_complete() None
+        +mark_incomplete() None
+        +next_occurrence() Task
         +priority_score() int
         +__repr__() String
     }
@@ -34,8 +37,10 @@ classDiagram
         +Owner owner
         +List planned_tasks
         +List skipped_tasks
+        +mark_task_complete(task) Task
         +build_schedule() None
         +check_conflicts() List
+        +conflict_warnings() List
         +filter_tasks(status, pet_name) List
         +total_duration() int
         +display() String
@@ -46,4 +51,6 @@ classDiagram
     Pet "1" --> "*" Task : has
     Scheduler "1" --> "1" Owner : uses
     Owner ..> Task : checks time for
-    Scheduler ..> Pet : reads tasks from
+    Scheduler ..> Pet : reads/updates tasks on
+    Scheduler ..> Task : marks complete
+    Task ..> Task : spawns next occurrence

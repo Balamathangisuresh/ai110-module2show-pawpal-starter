@@ -21,7 +21,7 @@
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
 
-    Yes, when brainstorming the uml, Claude recommended 5 different classes which split the now Scheduler class into two seperate classes. This seemed unnecessary and exceeded the number of classes so I asked Claude to move some attributes which it moved to Scheduler class.
+    Yes, when brainstorming the uml, Claude recommended 5 different classes which split the now Scheduler class into two seperate classes for which one class was very small and only dealt with the output. This seemed like an unnecessary number of classes so I asked Claude to move some attributes which it moved to Scheduler class.
 
 ---
 
@@ -54,10 +54,20 @@
 - How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
 - What kinds of prompts or questions were most helpful?
 
+    I used AI tools to brainstorm each of the classes, their relationships with each other, design the uml, implement each class, connect the backend system to the UI, debug the bugs I found, and make tests.
+
+    Prompts were most helpful when I gave a lot of specificity to what I want. For example, when debugging, intead of saying the generate schedule button logic is incorrect, when I explained to Claude that when the schedule button was clicked multiple times, the time available was not reset from what was left from the previous time available, and paste a sample output, the AI finds the bug very quickly and efficently solves it instead of wasting tokens or changing uneccesary code trying to figure out what is the error.
+
 **b. Judgment and verification**
 
 - Describe one moment where you did not accept an AI suggestion as-is.
 - How did you evaluate or verify what the AI suggested?
+
+    Claude had first built a sorting algorithm to sort tasks by start time first, using priority only as a tiebreaker for same-time tasks. It ran and passed the existing tests, so on the surface it looked correct.
+
+    However, when I tested it, I noticed a  a low-priority afternoon task got locked into the time budget first (because it came earlier in the day), leaving no time left for a high-priority evening task. This seemed logically incorrect for a scheduling app.
+
+    I then described the exact scenario in detail rather than just saying "it's wrong." Claude then restructured the logic to select tasks by priority first, then re-sort the result chronologically for display. I then tested the feature to make sure the algorithm was working correctly. 
 
 ---
 
@@ -68,10 +78,21 @@
 - What behaviors did you test?
 - Why were these tests important?
 
+    I focused my tests on five core scheduling behaviors in pawpal_system.py: sorting correctness, recurrence logic, conflict detection, time-budget/skip logic, and priority handling. For each one I tried to cover both a happy path and at least one boundary case. For example, not just high priority sorts before low, but also what happens when two tasks tie on priority, or when there are no tasks at all.
+
+    These were the most important behaviors to test because they're the parts of the system that make actual decisions rather than just storing data: sorting and packing determine what a pet owner sees as today's plan,recurrence determines whether care tasks disappear after being completed once, and conflict detection is the one thing standing between the owner and double-booking a task.
+
 **b. Confidence**
 
 - How confident are you that your scheduler works correctly?
 - What edge cases would you test next if you had more time?
+
+    I'm fairly confident in the behaviors I tested because all 21 tests pass, covering both normal use and the boundary conditions I could think of. But I'm not confident the scheduler is perfectly 100% functional, because there are some methods I didn't test at all, like filter_tasks() and Pet.remove_task().
+
+    Some edge cases I would test if I had more time is: 
+    - _time_to_minutes() assumes a clean "HH:MM" format and would crash on bad input.
+    - Tasks that cross midnight, for example, a task starting at 23:50 with a 30-minute duration doesn't wrap into the next day in the current overlap math, so it could miss a real conflict or flag a false one. 
+    - Zero or negative duration/available_minutes, I never tested what happens at these boundaries, and they're easy for a user to enter by accident.
 
 ---
 
@@ -81,10 +102,16 @@
 
 - What part of this project are you most satisfied with?
 
+    I am most satisfied with how organized I was in this project compared to the last project, especially in my use of AI. I switched to a new chat for every step so I could easily track back to a previous chat, keep track of what step I was on and most importantly keep Claude from giving me a biased generation. I also had more of an intuition to decide whether or not to accept an AI's suggestion or not.
+
 **b. What you would improve**
 
 - If you had another iteration, what would you improve or redesign?
 
+    I would improve the Scheduler to include more personal preferences so its more adaptable for users and test and adapt my code to handle more edge cases in case of a wrong input.
+
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+
+    I learned that giving an AI more detailed prompts with enough context helps better generate code/debug/brainstorm according to what you want it to do. Instead of saying something vague like "this is wrong", explaining what makes it wrong as much as you can helps the AI get to the root cause faster and prevents uneccesary changes in code. 
